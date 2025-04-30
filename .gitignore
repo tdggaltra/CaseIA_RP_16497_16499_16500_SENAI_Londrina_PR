@@ -1,0 +1,14 @@
+# Ambiente virtual
+venv/
+env/
+.env/
+.venv/
+ENV/
+
+# Anaconda
+.conda/
+anaconda/
+.anaconda/
+
+# Jupyter
+.ipynb_checkpoints/
