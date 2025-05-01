@@ -1,0 +1,31 @@
+{
+    "heating_model": "XGBoost_otimizado",
+    "cooling_model": "XGBoost_otimizado",
+    "preprocessor": "preprocessor.pkl",
+    "feature_names": [
+        "Relative_Compactness",
+        "Surface_Area",
+        "Wall_Area",
+        "Roof_Area",
+        "Overall_Height",
+        "Glazing_Area",
+        "Orientation_Norte",
+        "Orientation_Oeste",
+        "Orientation_Sul",
+        "Glazing_Area_Distribution_Norte",
+        "Glazing_Area_Distribution_Oeste",
+        "Glazing_Area_Distribution_Sem Vidra\u00e7as",
+        "Glazing_Area_Distribution_Sul",
+        "Glazing_Area_Distribution_Uniforme"
+    ],
+    "heating_metrics": {
+        "rmse": 0.3769333223918935,
+        "mae": 0.2732039801692549,
+        "r2": 0.998598785171576
+    },
+    "cooling_metrics": {
+        "rmse": 0.992105643609784,
+        "mae": 0.5930173608028527,
+        "r2": 0.9890804346412304
+    }
+}
