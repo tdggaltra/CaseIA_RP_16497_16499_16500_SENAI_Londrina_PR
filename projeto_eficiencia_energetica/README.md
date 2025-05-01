@@ -38,6 +38,7 @@ O projeto utiliza o conjunto de dados público UCI Energy Efficiency Dataset, qu
 - Conda (Anaconda ou Miniconda) 🐘
 - PostgreSQL (para AT3) 🐘
 - Git 🐙
+- Docker e Docker Compose (para execução containerizada) 🐳
 
 ### Clonando o Repositório
 
@@ -46,7 +47,43 @@ git clone https://github.com/tdggaltra/CaseIA_RP_16497_16499_16500_SENAI_Londrin
 cd CaseIA_RP_16497_16499_16500_SENAI_Londrina_PR
 ```
 
-### 🛠️ Configuração do Ambiente
+## ▶️ Executando o Projeto
+
+Existem duas maneiras de executar este projeto: usando ambiente Conda tradicional ou usando Docker. Recomendamos o uso do Docker para uma experiência mais uniforme e isolada.
+
+### 🐳 Execução com Docker (Recomendado)
+
+A maneira mais simples de executar o projeto completo é usando Docker:
+
+1. **Pré-requisitos**:
+   - Docker Desktop instalado e em execução
+   - Docker Compose instalado
+
+2. **Construir e iniciar os containers**:
+   ```bash
+   # Na raiz do projeto
+   docker-compose up --build
+   ```
+
+3. **Acessar a aplicação**:
+   - Abra um navegador e acesse `http://localhost:8000`
+   - Faça login com as credenciais padrão:
+     - Usuário: admin
+     - Email: admin@admin.com
+     - Senha: Senai@2025
+
+4. **Parar os containers**:
+   ```bash
+   # Para interromper os containers (pressione Ctrl+C)
+   # Ou em outro terminal
+   docker-compose down
+   ```
+
+### 🐘 Execução com Conda (Método Alternativo)
+
+Se preferir executar sem Docker, siga estas instruções:
+
+#### 🛠️ Configuração do Ambiente Conda
 
 1. **Criar e ativar o ambiente conda**:
 
@@ -73,33 +110,10 @@ conda install -c conda-forge xgboost lightgbm shap statsmodels plotly
 
 # Para o sistema web Django
 conda install django
-pip install psycopg2-binary django-crispy-forms
+pip install psycopg2-binary django-crispy-forms django-widget-tweaks
 ```
 
-## 📁 Estrutura do Projeto
-
-```
-projeto_eficiencia_energetica/
-├── data/
-│   ├── raw/                    # Dados brutos
-│   └── processed/              # Dados processados
-├── notebooks/
-│   ├── at1_eda/                # Notebooks de análise exploratória
-│   └── at2_modelagem/          # Notebooks de modelagem
-├── src/
-│   ├── preprocessing/          # Módulos de pré-processamento
-│   ├── features/               # Engenharia de features
-│   ├── models/                 # Implementação dos modelos
-│   └── evaluation/             # Avaliação de modelos
-├── models/                     # Modelos treinados salvos
-├── reports/
-│   └── figures/                # Visualizações e gráficos
-└── django_app/                 # Aplicação web Django
-```
-
-## ▶️ Executando o Projeto
-
-### AT1 - Análise Exploratória dos Dados 📊
+#### AT1 - Análise Exploratória dos Dados 📊
 
 1. **Ativar o ambiente conda**:
 ```bash
@@ -118,7 +132,7 @@ jupyter notebook
 - Selecione o kernel "Python (Análise Preditiva)"
 - Execute as células do notebook para realizar a análise exploratória
 
-### AT2 - Modelagem e Avaliação de Algoritmos 🤖
+#### AT2 - Modelagem e Avaliação de Algoritmos 🤖
 
 1. **Executar os notebooks na seguinte ordem**:
 - `notebooks/at2_modelagem/01_preprocessamento.ipynb`: Pré-processamento dos dados
@@ -131,7 +145,7 @@ jupyter notebook
 - As visualizações serão salvas em `reports/figures/`
 - Os resultados das avaliações serão salvos em `reports/resultados_modelos.csv` e `reports/resultados_modelos_otimizados.csv`
 
-### AT3 - Sistema Web para Predição 🌐
+#### AT3 - Sistema Web para Predição 🌐
 
 1. **Configurar o banco de dados PostgreSQL**:
 
@@ -151,10 +165,9 @@ cd projeto_eficiencia_energetica/django_app
 python manage.py makemigrations
 python manage.py migrate
 
-# Criar usuário padrão para testes
-python manage.py create_default_user
-# E-mail: admin@admin.com
-# Password: Senai@2025
+# Criar superusuário
+python manage.py createsuperuser
+# Seguir as instruções para criar um usuário administrador
 
 # Iniciar o servidor de desenvolvimento
 python manage.py runserver
@@ -162,8 +175,32 @@ python manage.py runserver
 
 3. **Acessar a aplicação**:
 - Abra um navegador e acesse `http://localhost:8000`
-- Faça login com as credenciais padrão ou crie um novo usuário
+- Faça login com as credenciais do superusuário criado
 - Utilize a interface para realizar predições de eficiência energética
+
+## 📁 Estrutura do Projeto
+
+```
+projeto_eficiencia_energetica/
+├── data/
+│   ├── raw/                    # Dados brutos
+│   └── processed/              # Dados processados
+├── notebooks/
+│   ├── at1_eda/                # Notebooks de análise exploratória
+│   └── at2_modelagem/          # Notebooks de modelagem
+├── src/
+│   ├── preprocessing/          # Módulos de pré-processamento
+│   ├── features/               # Engenharia de features
+│   ├── models/                 # Implementação dos modelos
+│   └── evaluation/             # Avaliação de modelos
+├── models/                     # Modelos treinados salvos
+├── reports/
+│   └── figures/                # Visualizações e gráficos
+├── django_app/                 # Aplicação web Django
+├── Dockerfile                  # Configuração do container Docker
+├── docker-compose.yml          # Orquestração de containers
+└── requirements.txt            # Dependências do projeto
+```
 
 ## 🔍 Detalhes da Implementação
 
@@ -206,11 +243,55 @@ A aplicação Django inclui:
 - Banco de dados PostgreSQL para armazenar predições 💾
 - Visualização e exclusão de predições salvas 📋
 
+### Containerização com Docker 🐳
+
+O projeto está configurado para execução em containers Docker:
+- **Multistage build**: Otimiza o tamanho e a eficiência dos containers
+- **Serviços separados**: Web (Django) e DB (PostgreSQL)
+- **Volumes persistentes**: Garantem que os dados do banco de dados sejam preservados
+- **Configuração por variáveis de ambiente**: Facilita a adaptação a diferentes ambientes
+- **Exposição de portas**: Django (8000), PostgreSQL (5432)
+
 ## 📝 Resultados e Conclusões
 
 Os melhores modelos para predição das cargas de aquecimento (🔥) e resfriamento (❄️) são baseados em algoritmos de ensemble (como XGBoost e Gradient Boosting), que conseguem capturar relações não-lineares complexas entre as variáveis.
 
 As características mais importantes para a eficiência energética são a altura total, a compacidade relativa e a área da superfície do edifício.
+
+## 🔧 Solução de Problemas
+
+### Problemas comuns com Docker
+
+1. **Erro "container name already exists"**:
+   ```bash
+   docker-compose down
+   docker-compose up --build
+   ```
+
+2. **Erro de conexão com o banco de dados**:
+   - Verifique se o container do PostgreSQL está em execução
+   - Certifique-se de que as configurações de host estão apontando para "db"
+
+3. **Erro de permissão negada em arquivos**:
+   ```bash
+   sudo chown -R $USER:$USER .
+   ```
+
+4. **Erro "ModuleNotFoundError"**:
+   - Edite o requirements.txt para incluir a dependência faltante
+   - Reconstrua os containers: `docker-compose up --build`
+
+### Redefinindo Senha de Admin
+
+Se você precisar redefinir a senha do usuário administrador:
+
+```bash
+# Para execução local
+python django_app/manage.py changepassword admin
+
+# Para execução com Docker
+docker-compose exec web bash -c "cd django_app && python manage.py changepassword admin"
+```
 
 ## 👥 Contribuição
 

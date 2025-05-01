@@ -1,0 +1,21 @@
+# Crie o arquivo requirements.txt
+
+# Análise de dados e ML
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+xgboost
+lightgbm
+joblib
+
+# Django e aplicação web
+django==5.2
+psycopg2-binary
+django-crispy-forms
+django-widget-tweaks
+
+# Utilidades
+jupyter
+ipykernel
