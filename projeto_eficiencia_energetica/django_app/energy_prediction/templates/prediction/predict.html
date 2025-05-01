@@ -1,0 +1,74 @@
+<!-- templates/prediction/predict.html -->
+{% extends 'base.html' %}
+
+{% block title %}Nova Predição{% endblock %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Nova Predição de Eficiência Energética</h3>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Preencha os dados do edifício para obter a predição de carga de aquecimento e resfriamento.</p>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="{{ form.relative_compactness.id_for_label }}">Relative Compactness</label>
+                            {{ form.relative_compactness|add_class:"form-control" }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.surface_area.id_for_label }}">Surface Area</label>
+                            {{ form.surface_area|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="{{ form.wall_area.id_for_label }}">Wall Area</label>
+                            {{ form.wall_area|add_class:"form-control" }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.roof_area.id_for_label }}">Roof Area</label>
+                            {{ form.roof_area|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="{{ form.overall_height.id_for_label }}">Overall Height</label>
+                            {{ form.overall_height|add_class:"form-control" }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.orientation.id_for_label }}">Orientation</label>
+                            {{ form.orientation|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <label for="{{ form.glazing_area.id_for_label }}">Glazing Area</label>
+                            {{ form.glazing_area|add_class:"form-control" }}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ form.glazing_area_distribution.id_for_label }}">Glazing Area Distribution</label>
+                            {{ form.glazing_area_distribution|add_class:"form-control" }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Realizar Predição</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

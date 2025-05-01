@@ -1,0 +1,16 @@
+<!-- users/profile.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Meu Perfil</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <h3>Informações de Usuário</h3>
+    {{ u_form.as_p }}
+    
+    <h3>Informações de Contato</h3>
+    {{ p_form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Atualizar Perfil</button>
+  </form>
+{% endblock %}

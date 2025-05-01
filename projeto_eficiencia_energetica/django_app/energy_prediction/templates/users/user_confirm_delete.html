@@ -1,0 +1,12 @@
+<!-- users/user_confirm_delete.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Confirmar Exclusão de Usuário</h2>
+  <p>Tem certeza que deseja excluir o usuário {{ user.username }}?</p>
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancelar</a>
+  </form>
+{% endblock %}

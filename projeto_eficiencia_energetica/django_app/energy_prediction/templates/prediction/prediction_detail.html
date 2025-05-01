@@ -1,0 +1,124 @@
+<!-- templates/prediction/prediction_detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}Resultado da Predição{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s;
+    }
+    .result-card:hover {
+        transform: translateY(-5px);
+    }
+    .result-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .info-card {
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Resultado da Predição</h2>
+        <p class="text-muted">Realizada em: {{ prediction.date_created|date:"d/m/Y H:i" }}</p>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <div class="card result-card bg-primary text-white mb-4">
+            <div class="card-body text-center py-4">
+                <h3 class="card-title">Carga de Aquecimento</h3>
+                <p class="result-value">{{ prediction.heating_load|floatformat:2 }}</p>
+                <p class="card-text">kWh/m²</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card result-card bg-success text-white mb-4">
+            <div class="card-body text-center py-4">
+                <h3 class="card-title">Carga de Resfriamento</h3>
+                <p class="result-value">{{ prediction.cooling_load|floatformat:2 }}</p>
+                <p class="card-text">kWh/m²</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <h4>Dados do Edifício</h4>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Compacidade Relativa:</strong>
+            <span>{{ prediction.relative_compactness }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Área da Superfície:</strong>
+            <span>{{ prediction.surface_area }} m²</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Área da Parede:</strong>
+            <span>{{ prediction.wall_area }} m²</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Área do Telhado:</strong>
+            <span>{{ prediction.roof_area }} m²</span>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Altura Total:</strong>
+            <span>{{ prediction.overall_height }} m</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Orientação:</strong>
+            <span>{{ prediction.orientation }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Área Envidraçada:</strong>
+            <span>{{ prediction.glazing_area }}</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card info-card p-3">
+            <strong>Distribuição da Área Envidraçada:</strong>
+            <span>{{ prediction.glazing_area_distribution }}</span>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <a href="{% url 'prediction_list' %}" class="btn btn-secondary">Voltar para a Lista</a>
+        <a href="{% url 'predict' %}" class="btn btn-primary">Nova Predição</a>
+        <a href="{% url 'prediction_delete' prediction.pk %}" class="btn btn-danger float-right">Excluir Predição</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,186 @@
+<!-- templates/prediction/dashboard.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+    }
+    .prediction-item {
+        border-left: 4px solid #4e73df;
+        transition: background-color 0.2s;
+    }
+    .prediction-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Dashboard</h1>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-primary text-white">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Total de Predições</div>
+                        <div class="stat-number">{{ total_predictions }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calculator fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-success text-white">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Última Predição</div>
+                        {% if predictions %}
+                        <div class="stat-number">{{ predictions.0.date_created|date:"d/m/Y" }}</div>
+                        {% else %}
+                        <div class="stat-number">-</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card bg-info text-white">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">Usuário</div>
+                        <div class="stat-number">{{ user.first_name }} {{ user.last_name }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-user fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card dashboard-card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Últimas Predições</h5>
+            </div>
+            <div class="card-body px-0">
+                {% if predictions %}
+                <div class="list-group list-group-flush">
+                    {% for prediction in predictions %}
+                    <a href="{% url 'prediction_detail' prediction.id %}" class="list-group-item list-group-item-action prediction-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <small class="text-muted">{{ prediction.date_created|date:"d/m/Y H:i" }}</small>
+                                <div>Edifício {{ prediction.overall_height }}m</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-fire text-danger mr-2"></i>
+                                    <div>{{ prediction.heating_load|floatformat:2 }} kWh/m²</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-snowflake text-primary mr-2"></i>
+                                    <div>{{ prediction.cooling_load|floatformat:2 }} kWh/m²</div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p>Nenhuma predição realizada até o momento.</p>
+                    <a href="{% url 'predict' %}" class="btn btn-primary">Realizar Primeira Predição</a>
+                </div>
+                {% endif %}
+            </div>
+            {% if predictions %}
+            <div class="card-footer">
+                <a href="{% url 'prediction_list' %}" class="btn btn-sm btn-outline-primary">Ver Todas as Predições</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Ações Rápidas</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'predict' %}" class="btn btn-primary btn-lg mb-3">
+                        <i class="fas fa-plus-circle mr-2"></i> Nova Predição
+                    </a>
+                    {% if user.is_superuser %}
+                    <a href="{% url 'user_list' %}" class="btn btn-secondary btn-lg mb-3">
+                        <i class="fas fa-users mr-2"></i> Gerenciar Usuários
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'profile' %}" class="btn btn-outline-dark btn-lg">
+                        <i class="fas fa-user-cog mr-2"></i> Atualizar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-white">
+                <h5 class="card-title mb-0">Sobre o Sistema</h5>
+            </div>
+            <div class="card-body">
+                <p>Este sistema utiliza modelos de Machine Learning para prever a eficiência energética de edifícios com base em suas características arquitetônicas.</p>
+                <p>Os modelos foram treinados com o conjunto de dados UCI Energy Efficiency Dataset e otimizados para fornecer previsões precisas de carga de aquecimento e resfriamento.</p>
+                <div class="alert alert-info">
+                    <h6 class="font-weight-bold">Instruções de Uso:</h6>
+                    <ol class="mb-0">
+                        <li>Acesse "Nova Predição" no menu</li>
+                        <li>Preencha as características do edifício</li>
+                        <li>Clique em "Realizar Predição"</li>
+                        <li>Visualize os resultados detalhados</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+{% endblock %}

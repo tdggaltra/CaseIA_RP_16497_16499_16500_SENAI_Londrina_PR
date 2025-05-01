@@ -1,0 +1,17 @@
+<!-- users/user_update.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Editar Usuário: {{ user.username }}</h2>
+  <form method="POST">
+    {% csrf_token %}
+    <h3>Informações de Usuário</h3>
+    {{ u_form.as_p }}
+    
+    <h3>Informações de Contato</h3>
+    {{ p_form.as_p }}
+
+    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+  </form>
+  <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancelar</a>
+{% endblock %}

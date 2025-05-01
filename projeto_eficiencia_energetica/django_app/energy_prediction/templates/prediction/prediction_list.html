@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Previsões{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Lista de Previsões</h2>
+
+    {% if predictions %}
+        <table class="table table-bordered table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Aquecimento (Heating Load)</th>
+                    <th scope="col">Resfriamento (Cooling Load)</th>
+                    <th scope="col">Data</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in predictions %}
+                    <tr>
+                        <th scope="row">{{ forloop.counter }}</th>
+                        <td>{{ p.heating_load }}</td>
+                        <td>{{ p.cooling_load }}</td>
+                        <td>{{ p.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            Nenhuma previsão encontrada.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

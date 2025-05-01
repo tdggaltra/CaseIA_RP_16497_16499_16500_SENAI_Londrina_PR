@@ -1,0 +1,11 @@
+<!-- users/user_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Detalhes do Usuário: {{ user.username }}</h2>
+  <p><strong>Nome completo:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Telefone:</strong> {{ user.profile.phone }}</p>
+  <a href="{% url 'user_update' user.pk %}" class="btn btn-warning">Editar</a>
+  <a href="{% url 'user_list' %}" class="btn btn-secondary">Voltar</a>
+{% endblock %}
